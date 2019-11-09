@@ -195,7 +195,6 @@ public class HomePage {
     }
 }
 
-
   /*  public void selectHotelsTab() {
         Actions act = new Actions(driver);
         act.moveToElement(driver.findElement(By.xpath("(//*[@*='hotelTab'])[2]"))).click().perform();
