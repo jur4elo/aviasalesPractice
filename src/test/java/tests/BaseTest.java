@@ -12,7 +12,7 @@ public class BaseTest {
     @BeforeMethod
     public void startUp() throws NoSuchMethodException {
         var factory = new BrowserFactory();
-        driver = factory.createWebDriver(BrowserType.FIREFOX);
+        driver = factory.createWebDriver(BrowserType.CHROME);
         driver.manage().window().maximize();
     }
 

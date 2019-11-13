@@ -32,24 +32,6 @@ public class HomePage {
     WebElement departureDate() {
         return driver.findElement(By.id("departDate"));
     }
-    //WebElement arrivingDate() { return driver.findElement(By.id("returnDate")); }
-
-
-    public void setNewTrip() {
-        arrivingInput().sendKeys("CHI");
-        departureInput().click();
-        departureInput().sendKeys("Veg");
-    }
-
-    public void setUpDatesForNewTrip() {
-        departureDate().click();
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("[aria-label='Mon Nov 11 2019']")));
-        var pickTheDepartureDate = driver.findElement(By.cssSelector("[aria-label='Mon Nov 11 2019']"));
-        pickTheDepartureDate.click();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@*='grid']")));
-        var pickTheArrivingDate = driver.findElement(By.cssSelector("[aria-label='Sat Nov 16 2019']"));
-        pickTheArrivingDate.click();
-    }
 
     WebElement passengers() {
         return driver.findElement(By.xpath("//*[@*='additional-fields__label']"));
@@ -59,7 +41,26 @@ public class HomePage {
         return driver.findElement(By.xpath("(//*[@*='custom-radio__element'])[3]"));
     }
 
+
+    public void setNewTrip(String cityD, String cityA) {
+        arrivingInput().sendKeys(cityD);
+        departureInput().click();
+        departureInput().sendKeys(cityA);
+    }
+
+    public void setUpDatesForNewTrip() {
+        departureDate().click();
+        Actions act = new Actions(driver);
+        act.moveToElement(driver.findElement(By.xpath("(//*[@role='button'])[2]"))).click().perform();
+        act.moveToElement(driver.findElement(By.cssSelector("[aria-label='Mon Dec 02 2019']"))).click().perform();
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[aria-label='Mon Dec 16 2019']")));
+        act.moveToElement(driver.findElement(By.cssSelector("[aria-label='Fri Dec 06 2019']"))).click().perform();
+
+    }
+
+
     public void setUpPassangersNumberAndComfortLevel() {
+        wait.until(ExpectedConditions.elementToBeClickable(passengers()));
         passengers().click();
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("(//*[@*='#FFF'])[2]")));
         Actions act = new Actions(driver);
@@ -133,44 +134,48 @@ public class HomePage {
         wait.until(ExpectedConditions.visibilityOf(inputThirdDestination()));
     }
 
-    public void setTripOne() {
-        inputFirstDeparture().sendKeys("SLC");
+    public void setTripOne(String cityD, String cityA) {
+        inputFirstDeparture().sendKeys(cityD);
         Actions act = new Actions(driver);
         act.moveToElement(inputFirstDestination()).click().perform();
-        inputFirstDestination().sendKeys("LAX");
+        inputFirstDestination().sendKeys(cityA);
         driver.findElement(By.xpath("(//*[@*='departDate'])[1]")).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//*[@role='button'])[2]")));
         act.moveToElement(driver.findElement(By.xpath("(//*[@role='button'])[2]"))).click().perform();
         act.moveToElement(driver.findElement(By.cssSelector("[aria-label='Mon Dec 02 2019']"))).click().perform();
     }
 
-    public void setTripTwo() {
-        inputSecondtDeparture().sendKeys("LAX");
+    public void setTripTwo(String cityD, String cityA) {
+        inputSecondtDeparture().sendKeys(cityD);
         Actions act = new Actions(driver);
         act.moveToElement(inputSecondDestination()).click().perform();
-        inputSecondDestination().sendKeys("DEN");
+        inputSecondDestination().sendKeys(cityA);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//*[@id='departDate'])[2]")));
         act.moveToElement(driver.findElement(By.xpath("(//*[@id='departDate'])[2]"))).click().perform();
         act.moveToElement(driver.findElement(By.cssSelector("[aria-label='Sat Dec 07 2019']"))).click().perform();
     }
 
-    public void setTripThree() {
-        inputThirdtDeparture().sendKeys("DEN");
+    public void setTripThree(String cityD, String cityA) {
+        inputThirdtDeparture().sendKeys(cityD);
         Actions act = new Actions(driver);
         act.moveToElement(inputThirdDestination()).click().perform();
-        inputThirdDestination().sendKeys("NYC");
+        inputThirdDestination().sendKeys(cityA);
         wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//*[@id='departDate'])[3]")));
         act.moveToElement(driver.findElement(By.xpath("(//*[@id='departDate'])[3]"))).click().perform();
         act.moveToElement(driver.findElement(By.cssSelector("[aria-label='Thu Dec 12 2019']"))).click().perform();
     }
 
+    WebElement plusOnePassengerButton() {
+        return driver.findElement(By.xpath("(//*[@*='additional-fields__passenger-control --increment'])[1]"));
+    }
+
     public void setUpPassengersAndComfortLevel() {
         Actions act = new Actions(driver);
-        act.moveToElement(driver.findElement(By.xpath("(//*[@*='additional-fields__label'])"))).click().perform();
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("(//*[@xmlns])[2]")));
-        act.moveToElement(driver.findElement(By.xpath("(//*[@xmlns])[2]"))).click().perform();
-        act.moveToElement(driver.findElement(By.xpath("(//*[@xmlns])[2]"))).click().perform();
-        act.moveToElement(driver.findElement(By.xpath("(//*[@xmlns])[2]"))).click().perform();
+        act.moveToElement(driver.findElement(By.xpath("//*[@*='additional-fields --multiway of_form_part']"))).click().perform();
+        wait.until(ExpectedConditions.elementToBeClickable(plusOnePassengerButton()));
+        act.moveToElement(plusOnePassengerButton()).doubleClick().perform();
+        businessClass().click();
+        passengers().click();
         act.moveToElement(driver.findElement(By.xpath("(//*[@*='custom-radio__element'])[3]"))).click().perform();
         act.moveToElement(driver.findElement(By.xpath("(//*[@*='additional-fields__label'])"))).click().perform();
     }
@@ -182,7 +187,7 @@ public class HomePage {
     public void clickFindTicketsButton() {
         driver.findElement(By.xpath("(//*[@*='submit'])[1]")).click();
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@class='countdown__title']")));
-        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".error-informer__icon")));
+        //wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".error-informer__icon")));
     }
 
     public boolean errorMessage() {
